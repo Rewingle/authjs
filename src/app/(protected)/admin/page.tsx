@@ -4,7 +4,7 @@ import { UserRole } from "@prisma/client";
 import { toast } from "sonner";
 
 import { admin } from "@/actions/admin";
-
+import Link from "next/link";
 import { RoleGate } from "@/components/auth/role-gate";
 import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
@@ -52,6 +52,9 @@ const AdminPage = () => {
           <Button onClick={onServerActionClick}>Click to test</Button>
         </div>
       </CardContent>
+      <div className="flex justify-center items-center py-2">
+        <Link href='/admin/addproduct'><Button>ADD TO PRODUCT</Button></Link>
+      </div>
     </Card>
   );
 };

@@ -54,17 +54,26 @@ model Account {
 
 model Product {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  SKU         String //XXX-YYY-ZZZ
   name        String
   description String
   price       Float
   image       String
-  
+  sizes       Size[]
 }
+//SKU [XXX] [YYY] [BZZZ]
+// TS-R-A101 TSHIRT RED SERIE A 101
+//TSRA101
+// TSHIRT = TS DRESS = DR PANTS = PT SHOES = SH ACCESORIES = AC BLOUSE = BL JACKET = JK SWEATER = SW 
+// SHORTS = SHRT SKIRT = SKT SUIT = ST COAT = CT LEGGINGS = LG
+// RED = R BLUE = B GREEN = G YELLOW = Y BLACK = BL WHITE = WH
+
 
 model Size {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
   name     String
-
+  products Product @relation(fields: [productId], references: [id])
+  productId String @db.ObjectId
 }
 
 
