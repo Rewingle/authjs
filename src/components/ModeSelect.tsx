@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { UserButton } from "@/components/auth/user-button";
 import { Button } from "@/components/ui/button";
 
-export const Navbar = () => {
+export const ModeSelect = () => {
   const pathname = usePathname();
 
   return (
