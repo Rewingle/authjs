@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from '@/components/ui/input';
-import { DropdownMenu } from '@/components/ui/dropdown-menu';
+/* import { DropdownMenu } from '@/components/ui/dropdown-menu'; */
 
 type Props = {}
 
@@ -14,7 +14,7 @@ const AddProduct = (props: Props) => {
         <CardContent>
             <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-md">
             <p className="text-sm font-medium">Add Product</p>
-            <DropdownMenu/>
+  
             <Input placeholder="Product Name" />
             </div>
         </CardContent>
