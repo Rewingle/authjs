@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "mongodb"
-  url       = env("DATABASE_URL")
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 enum UserRole {
@@ -25,8 +25,8 @@ model User {
   role          UserRole  @default(USER)
   accounts      Account[]
 
-  address String?
-  zipCode String?
+  address     String?
+  zipCode     String?
   dateOfBirth DateTime?
 
   isTwoFactorEnabled    Boolean                @default(false)
@@ -39,12 +39,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? 
-  access_token      String? 
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? 
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -54,13 +54,19 @@ model Account {
 
 model Product {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  SKU         String //XXX-YYY-ZZZ
+  sku         String
   name        String
   description String
+  category    String //Category @relation(fields: [categoryId], references: [id])
+  color       String //@relation(fields: [colorId], references: [id])
+  //colorId     String @db.ObjectId
   price       Float
   image       String
-  sizes       Size[]
+  stock       Int
+  sizeIds     String[] @db.ObjectId
+  sizes       Size[]   @relation(fields: [sizeIds], references: [id]) //Size[]
 }
+
 //SKU [XXX] [YYY] [BZZZ]
 // TS-R-A101 TSHIRT RED SERIE A 101
 //TSRA101
@@ -68,14 +74,25 @@ model Product {
 // SHORTS = SHRT SKIRT = SKT SUIT = ST COAT = CT LEGGINGS = LG
 // RED = R BLUE = B GREEN = G YELLOW = Y BLACK = BL WHITE = WH
 
-
-model Size {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  products Product @relation(fields: [productId], references: [id])
-  productId String @db.ObjectId
+model Category {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  //products Product[]
 }
 
+model Color {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  //products Product[]
+}
+
+model Size {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  stock      Int
+  productIds String[]    @db.ObjectId
+  products   Product[]  @relation(fields: [productIds], references: [id])
+}
 
 model VerificationToken {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId

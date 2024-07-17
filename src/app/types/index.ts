@@ -1,0 +1,30 @@
+export const categories = [
+    "👕 Tshirt",
+    "👔 Shirt",
+    "👖 Pants",
+    "👟 Shoes",
+    "🧥 Hoodie",
+    "🧥 Jacket",
+    "🩳 Shorts",
+    "🧶 Sweater",
+    "🧦 Socks",
+    "🩲 Underwear",
+    "🎀 Accessories",
+    "🔶 Other",
+]
+
+export const colors = [
+    "🖤 Black",
+    "⚪️ White",
+    "❤️ Red",
+    "💙 Blue",
+    "💚 Green",
+    "💛 Yellow",
+    "🧡 Orange",
+    "💜 Purple",
+    "💗 Pink",
+    "🟤 Brown",
+    "🔘 Grey",
+    "🟫 Beige",
+    "🌈 Mixed",
+]
