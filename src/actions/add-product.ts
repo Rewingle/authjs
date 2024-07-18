@@ -44,7 +44,7 @@ export const addProduct = async (
                 stock,
                 }
         });
-
+        console.log(addProductResult);
         //product -> addproduct SERVICE
     return { success: "Product added!" };
 }
