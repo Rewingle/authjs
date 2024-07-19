@@ -68,7 +68,7 @@ const Navbar: React.FC<NavbarProps> = () => {
                     <div className='hidden md:flex size-full justify-between items-center px-8 font-semibold col-span-4'>
                         <span><Link href={'/'}>Home</Link></span>
                         <span><Link href={'products'}>Products</Link></span>
-                        <span><Link href={'/about'}>About</Link></span>
+                        <span><Link href={'/test'}>Test</Link></span>
                     </div>
 
                 </div>

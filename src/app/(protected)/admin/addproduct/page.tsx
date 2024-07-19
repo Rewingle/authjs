@@ -2,7 +2,7 @@
 import React, { startTransition } from 'react'
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from '@/components/ui/input';
-import { useForm, useWatch, Control } from "react-hook-form";
+import { useForm, useWatch, Control, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { useState, useTransition } from 'react';
@@ -63,14 +63,14 @@ const AddProduct = (props: Props) => {
   const [firstSKU, setFirstSKU] = useState("")
   const [secondSKU, setSecondSKU] = useState("")
 
-  function IsolateFirstSKU({ control }: { control: Control<z.infer<typeof addProductSchema>> }) {
-    const firstSKU = useWatch({
-      control,
-      name: "sku",
-      defaultValue: "XXX"
-    });
-
-  }
+  /*  function IsolateFirstSKU({ control }: { control: Control<z.infer<typeof addProductSchema>> }) {
+     const firstSKU = useWatch({
+       control,
+       name: "sku",
+       defaultValue: "XXX"
+     });
+ 
+   } */
   const onSubmit = (values: z.infer<typeof addProductSchema>) => {
     alert('test')
     setError("");
