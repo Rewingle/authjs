@@ -2,11 +2,9 @@
 import * as z from "zod";
 import { addProductSchema } from "@/schemas";
 //import { addProductService } from "@/services/product";
-import {db} from "@/lib/db";
+import { db } from "@/lib/db";
 
-export const addProduct = async (
-    product: z.infer<typeof addProductSchema>
-) => {
+export const addProduct = async (product: z.infer<typeof addProductSchema>) => {
     const validatedFields = addProductSchema.safeParse(product);
 
     if (!validatedFields.success) {
@@ -22,8 +20,20 @@ export const addProduct = async (
         image,
         stock,
         sizes } = validatedFields.data;
-        
-        console.log( sku,
+
+    console.log(sku,
+        name,
+        description,
+        category,
+        color,
+        price,
+        image,
+        stock,
+        sizes);
+
+    const addProductResult = await db.product.create({
+        data: {
+            sku,
             name,
             description,
             category,
@@ -31,20 +41,9 @@ export const addProduct = async (
             price,
             image,
             stock,
-            sizes );
-
-        const addProductResult = await db.product.create({
-            data: {sku,
-                name,
-                description,
-                category,
-                color,
-                price,
-                image,
-                stock,
-                }
-        });
-        console.log(addProductResult);
-        //product -> addproduct SERVICE
+        }
+    });
+    console.log(addProductResult);
+    //product -> addproduct SERVICE
     return { success: "Product added!" };
 }

@@ -30,6 +30,7 @@ import { categories } from '@/app/types';
 import { Textarea } from "@/components/ui/textarea"
 import { colors } from '@/app/types';
 import { Button } from '@/components/ui/button';
+import { FormSuccess } from '@/components/form-success';
 
 type Props = {}
 
@@ -37,17 +38,17 @@ type Props = {}
 
 const AddProduct = (props: Props) => {
 
-
   const form = useForm<z.infer<typeof addProductSchema>>({
     resolver: zodResolver(addProductSchema),
     defaultValues: {
+      sku: "",
       name: "",
       description: "",
-      category: "",/* category: Category, */
-      color: "",/* color: "", */
-      price: -1,
-      image: "",
-      stock: -1,
+      category: categories[0],
+      color: colors[0],
+      price: 0,
+      image: "https://cdn.dummyjson.com/products/images/furniture/Knoll%20Saarinen%20Executive%20Conference%20Chair/1.png",
+      stock: 0,
       sizes: [{
         name: "XS",
         stock: 10,
@@ -58,13 +59,15 @@ const AddProduct = (props: Props) => {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
   const [isPending, startTransition] = useTransition();
-  const [isImageActive, setIsImageActive] = useState<boolean>(true);
+  const [isImageActive, setIsImageActive] = useState<boolean>(false);
 
   const onSubmit = (values: z.infer<typeof addProductSchema>) => {
+    alert('test')
     setError("");
     setSuccess("");
 
     startTransition(() => {
+      console.log(values)
       addProduct(values)
         .then((data) => {
           if (data?.error) {
@@ -78,11 +81,11 @@ const AddProduct = (props: Props) => {
     });
   }
   return (
-    <div className='grid grid-cols-5 md:w-[800px] sm:w-[400px] gap-8'>
-      <Card className='col-span-1 invisible'>
+    <div className='grid md:grid-cols-3 lg:grid-cols-6 gap-8'>
+      <Card className='lg:col-span-1 invisible'>
 
       </Card>
-      <Card className='col-span-3 p-6'>
+      <Card className='md:col-span-5 lg:col-span-4 p-6'>
         <CardHeader>
           <p className="text-xl font-semibold text-center">Add Product</p>
         </CardHeader>
@@ -118,13 +121,27 @@ const AddProduct = (props: Props) => {
                   )}
                 ></FormField>
                 <br />
+                <FormField
+                  control={form.control}
+                  name='image'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Image</FormLabel>
+                      <FormControl>
+                        <Input {...field} disabled={isPending} placeholder="Image" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                ></FormField>
+                <br />
                 <div className='w-full flex justify-between items-center'>
                   <FormField
                     control={form.control}
                     name='category'
                     render={({ field }) => (
                       <FormItem>
-                         <FormLabel>Categories</FormLabel>
+                        <FormLabel>Categories</FormLabel>
                         <FormControl>
                           <Select>
                             <SelectTrigger>
@@ -184,14 +201,15 @@ const AddProduct = (props: Props) => {
                       name='price'
                       render={({ field }) => (
                         <FormItem>
-                           <FormLabel>Price $</FormLabel>
+                          <FormLabel>Price $</FormLabel>
                           <FormControl>
-                            <Input {...field} disabled={isPending} type='number' placeholder='Price $' defaultValue={0} />
+                            <Input {...field} disabled={isPending} type='number' placeholder='Price $' />
                           </FormControl>
+                          <FormMessage></FormMessage>
                         </FormItem>
                       )}
                     />
-                   
+
                   </div>
                   <div className='col-span-2'>
                     <FormField
@@ -199,28 +217,55 @@ const AddProduct = (props: Props) => {
                       name='stock'
                       render={({ field }) => (
                         <FormItem>
-                           <FormLabel>Stock</FormLabel>
+                          <FormLabel>Stock</FormLabel>
                           <FormControl>
-                            <Input {...field} disabled={isPending} type='number' placeholder='Stock' defaultValue={1} />
+                            <Input {...field} disabled={isPending} type='number' placeholder='Stock' />
                           </FormControl>
+                          <FormMessage></FormMessage>
                         </FormItem>
                       )}
                     />
                   </div>
 
-
                 </div>
               </div>
               <br />
+
+              <div className='w-full grid grid-cols-7 gap-3'>
+
+                <div className='col-span-1 flex items-center'>  <FormLabel>SKU :</FormLabel></div>
+                <div className='col-span-1 flex items-center'>XXX</div> 
+                <div className='col-span-1 flex items-center'>YYY</div>
+                <div className='col-span-4'>
+
+                  <FormField
+                    control={form.control}
+                    name='sku'
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className='flex'>
+                          <FormControl>
+                            <Input className='w-16' {...field} disabled={isPending} type='text' placeholder='SKU' />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+              </div>
+              <br />
+              {/*  <FormSuccess message='Successfully Added' /> */}
               <div>
-                <Button onClick={() => setIsImageActive(!isImageActive)} className='w-full'>SUBMIT</Button>
+                <Button className='w-full' type='submit'>SUBMIT</Button>
               </div>
             </form>
           </Form>
           <div onClick={() => setIsImageActive(!isImageActive)}>CLICK ME</div>
         </CardContent>
       </Card>
-      {isImageActive ? <Card className='col-span-1'>
+      {isImageActive ? <Card className='lg:col-span-1'>
 
       </Card> : null}
     </div>

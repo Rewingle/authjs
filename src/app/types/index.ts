@@ -11,7 +11,7 @@ export const categories = [
     "🩲 Underwear",
     "🎀 Accessories",
     "🔶 Other",
-]
+] as const
 
 export const colors = [
     "🖤 Black",
@@ -27,4 +27,4 @@ export const colors = [
     "🔘 Grey",
     "🟫 Beige",
     "🌈 Mixed",
-]
+] as const
