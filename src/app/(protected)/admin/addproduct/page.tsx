@@ -26,7 +26,7 @@ import {
 import { addProductSchema } from '@/schemas';
 /* import { DropdownMenu } from '@/components/ui/dropdown-menu'; */
 import { addProduct } from '@/actions/add-product';
-import { categories, categoryNames } from '@/app/types';
+import { categories, categoryNames, colorNames } from '@/app/types';
 import { Textarea } from "@/components/ui/textarea"
 import { colors } from '@/app/types';
 import { Button } from '@/components/ui/button';
@@ -38,14 +38,19 @@ type Props = {}
 
 const AddProduct = (props: Props) => {
 
-  const form = useForm<z.infer<typeof addProductSchema>>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<z.infer<typeof addProductSchema>>({
     resolver: zodResolver(addProductSchema),
     defaultValues: {
       sku: "",
       name: "",
       description: "",
       category: categoryNames[0],
-      color: colors[0],
+      color: colorNames[0],
       price: 0,
       image: "https://cdn.dummyjson.com/products/images/furniture/Knoll%20Saarinen%20Executive%20Conference%20Chair/1.png",
       stock: 0,
@@ -54,6 +59,7 @@ const AddProduct = (props: Props) => {
         stock: 10,
       }], /* EXAMPLE {name: "XS", stock: 24,} */
     },
+
   });
 
   const [error, setError] = useState<string>("");
@@ -62,26 +68,20 @@ const AddProduct = (props: Props) => {
   const [isImageActive, setIsImageActive] = useState<boolean>(false);
   const [firstSKU, setFirstSKU] = useState("")
   const [secondSKU, setSecondSKU] = useState("")
+  const [categorySKU, setCategorySKU] = useState("")
+  const [colorSKU, setColorSKU] = useState("")
 
-  /*  function IsolateFirstSKU({ control }: { control: Control<z.infer<typeof addProductSchema>> }) {
-     const firstSKU = useWatch({
-       control,
-       name: "sku",
-       defaultValue: "XXX"
-     });
- 
-   } */
   const onSubmit = (values: z.infer<typeof addProductSchema>) => {
     alert('test')
     setError("");
     setSuccess("");
-
+    console.log(values)
     startTransition(() => {
       console.log(values)
       addProduct(values)
         .then((data) => {
           if (data?.error) {
-            form.reset();
+            //form.reset();
             setError(data.error);
           }
         })
@@ -98,178 +98,98 @@ const AddProduct = (props: Props) => {
         <p className="text-xl font-semibold text-center">Add Product</p>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid-cols-3 gap-4 items-center justify-between">
-              <FormField
-                control={form.control}
-                name='name'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Product Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={isPending} placeholder='Product Name' />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}>
-              </FormField>
-              <br />
-              <FormField
-                control={form.control}
-                name='description'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea className='resize-none h-32' {...field} disabled={isPending} placeholder="Description" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              ></FormField>
-              <br />
-              <FormField
-                control={form.control}
-                name='image'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image</FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={isPending} placeholder="Image" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              ></FormField>
-              <br />
-              <div className='w-full flex justify-between items-center'>
-                <FormField
-                  control={form.control}
-                  name='category'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Categories</FormLabel>
-                      <FormControl>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a Category" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>Categories</SelectLabel>
-                              {categories.map(({ name }) => (
-                                <SelectItem {...field} disabled={isPending} key={name} value={name.toLowerCase()}>
-                                  {name}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='color'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Color</FormLabel>
-                      <FormControl>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a Color" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>Color</SelectLabel>
-                              {colors.map((color) => (
-                                <SelectItem {...field} disabled={isPending} key={color} value={color.toLowerCase()}>
-                                  {color}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+        <form onSubmit={handleSubmit(onSubmit)}>
 
-              </div>
-              <br />
-              <div className='grid grid-cols-4 gap-4'>
+          <div className="grid-cols-3 gap-4 items-center justify-between">
 
-                <div className='col-span-2 flex'>
-                  <FormField
-                    control={form.control}
-                    name='price'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Price $</FormLabel>
-                        <FormControl>
-                          <Input {...field} disabled={isPending} type='number' placeholder='Price $' />
-                        </FormControl>
-                        <FormMessage></FormMessage>
-                      </FormItem>
-                    )}
-                  />
-
-                </div>
-                <div className='col-span-2'>
-                  <FormField
-                    control={form.control}
-                    name='stock'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Stock</FormLabel>
-                        <FormControl>
-                          <Input {...field} disabled={isPending} type='number' placeholder='Stock' />
-                        </FormControl>
-                        <FormMessage></FormMessage>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-              </div>
-            </div>
+            <Input {...register("name")} disabled={isPending} placeholder='Product Name' />
+            {errors.description && <p>{errors.name?.message}</p>}
             <br />
 
-            <div className='w-full grid grid-cols-7 gap-3'>
+            <Textarea className='resize-none h-32' {...register("description")} disabled={isPending} placeholder="Description" />
+            {errors.description && <p>{errors.description?.message}</p>}
+            <br />
 
-              <div className='col-span-1 flex items-center'>  <FormLabel>SKU :</FormLabel></div>
-              <div className='col-span-1 flex items-center'> {/* <IsolateFirstSKU control={control} /> */}</div>
-              <div className='col-span-1 flex items-center'>YYY</div>
-              <div className='col-span-4'>
+            <Input {...register("image")} disabled={isPending} placeholder="Image" />
+            {errors.description && <p>{errors.image?.message}</p>}
+            <br />
+            <div className='w-full flex justify-between items-center'>
 
-                <FormField
-                  control={form.control}
-                  name='sku'
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className='flex'>
-                        <FormControl>
-                          <Input className='w-16' {...field} disabled={isPending} type='text' placeholder='SKU' />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <Select onValueChange={(value) => setCategorySKU(value)}>
+                <SelectTrigger>
+                  <SelectValue {...register("category")} placeholder="Select a Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Categories</SelectLabel>
+                    {categories.map(({ name, sku }) => (
+                      <SelectItem disabled={isPending} key={sku} value={sku}>
+                        {name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              <Select onValueChange={(value) => setColorSKU(value)}>
+                <SelectTrigger>
+                  <SelectValue {...register("color")} placeholder="Select a Color" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Color</SelectLabel>
+                    {colors.map(({ name, sku }) => (
+                      <SelectItem disabled={isPending} key={sku} value={sku}>
+                        {name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
 
             </div>
             <br />
-            {/*  <FormSuccess message='Successfully Added' /> */}
-            <div>
-              <Button className='w-full' type='submit'>SUBMIT</Button>
+            <div className='grid grid-cols-4 gap-4'>
+
+              <div className='col-span-2 flex'>
+
+
+                <Input {...register("price")} disabled={isPending} type='number' placeholder='Price $' />
+
+
+
+              </div>
+              <div className='col-span-2'>
+
+
+                <Input {...register("stock")} disabled={isPending} type='number' placeholder='Stock' />
+
+              </div>
+
             </div>
-          </form>
-        </Form>
+          </div>
+          <br />
+
+          <div className='w-full grid grid-cols-12'>
+
+            <div className='col-span-2 flex items-center'>  SKU: </div>
+            <div className='col-span-1 flex items-center'> {categorySKU ? categorySKU : 'XXX'}</div>
+            <div className='col-span-1 text-2xl flex items-center justify-center'>-</div>
+            <div className='col-span-1 flex items-center'>{colorSKU ? colorSKU : 'YYY'}</div>
+            <div className='col-span-1 text-2xl flex items-center justify-center'>-</div>
+            <div className='col-span-6'>
+
+              <Input className='w-16' {...register("sku")} disabled={isPending} type='text' placeholder='SKU' />
+
+            </div>
+
+          </div>
+          <br />
+          <div>
+            <Button className='w-full' type='submit'>SUBMIT</Button>
+          </div>
+
+        </form>
         <div onClick={() => setIsImageActive(!isImageActive)}>CLICK ME</div>
       </CardContent>
     </Card>
