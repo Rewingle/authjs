@@ -13,6 +13,7 @@ import { LogoutButton } from "@/components/auth/logout-button";
 import { ExitIcon } from "@radix-ui/react-icons";
 import { FaUser } from "react-icons/fa";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { FiAlignJustify } from "react-icons/fi";
 
 interface NavbarProps {
     // Add any props you need for your navbar
@@ -51,20 +52,25 @@ const UserButton = () => {
 const Navbar: React.FC<NavbarProps> = () => {
     return (
         <nav className='h-16 w-full bg-white flex justify-center'>
-            <div className='w-3/4 h-full flex'>
+            <div className='w-full px-4 md:p-0 md:w-3/4 h-full flex'>
                 <div className='h-full w-2/5 grid grid-cols-6'>
                     <div className='h-full col-span-2 justify-center items-center flex'>
                         {logoSVG}
                     </div>
-                    <div className='size-full flex justify-between items-center px-8 font-semibold col-span-4'>
+                    <div className='hidden md:flex size-full justify-between items-center px-8 font-semibold col-span-4'>
                         <span><Link href={'/'}>Home</Link></span>
                         <span><Link href={'products'}>Products</Link></span>
                         <span><Link href={'/about'}>About</Link></span>
                     </div>
 
                 </div>
-                <div className='h-full w-3/5 flex justify-end px-6'>
+                <div className='hidden md:flex h-full w-3/5 justify-end px-6'>
                     <UserButton />
+                </div>
+                <div className='flex md:hidden h-full w-3/5 justify-end'>
+                    <div className='flex justify-end w-16 h-full p-4'>
+                        <FiAlignJustify className='size-full'/>
+                    </div>
                 </div>
             </div>
 
