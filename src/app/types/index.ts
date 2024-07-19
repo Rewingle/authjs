@@ -1,4 +1,19 @@
 export const categories = [
+    {name: "Tshirt", sku: "TST"},
+    {name: "Shirt", sku: "SHT"},
+    {name: "Pants", sku: "PNT"},
+    {name: "Shoes", sku: "SHS"},
+    {name: "Hoodie", sku: "HDI"},
+    {name: "Jacket", sku: "JKT"},
+    {name: "Shorts", sku: "SRT"},
+    {name: "Sweater", sku: "SWT"},
+    {name: "Socks", sku: "SKS"},
+    {name: "Underwear", sku: "UWD"},
+    {name: "Accessories", sku: "ACC"},
+    {name: "Other", sku: "OTH"},
+] as const
+
+export const categoryNames = [
     "👕 Tshirt",
     "👔 Shirt",
     "👖 Pants",

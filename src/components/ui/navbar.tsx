@@ -14,6 +14,7 @@ import { ExitIcon } from "@radix-ui/react-icons";
 import { FaUser } from "react-icons/fa";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { FiAlignJustify } from "react-icons/fi";
+import { useCurrentRole } from '@/hooks/use-current-role';
 
 interface NavbarProps {
     // Add any props you need for your navbar
@@ -22,6 +23,7 @@ const logoSVG = <svg xmlns="http://www.w3.org/1000/svg" className='min-w-6' widt
 
 const UserButton = () => {
     const user = useCurrentUser();
+    const role = useCurrentRole();
 
     return (
         <DropdownMenu>
@@ -36,6 +38,12 @@ const UserButton = () => {
             <DropdownMenuContent className="w-40" align="end">
                 <DropdownMenuItem className='hover:cursor-pointer'>
                     <Link href={'/profile'}>👤 Profile</Link>
+                </DropdownMenuItem>
+                {role === 'ADMIN' ? <DropdownMenuItem className='hover:cursor-pointer'>
+                    <Link href={'/admin/manage'}>🛠️ Manage</Link>
+                </DropdownMenuItem> : null}
+                <DropdownMenuItem className='hover:cursor-pointer'>
+                    <Link href={'/settings'}>⚙️ Settings</Link>
                 </DropdownMenuItem>
                 <LogoutButton>
                     <DropdownMenuItem className='hover:cursor-pointer'>
@@ -69,7 +77,7 @@ const Navbar: React.FC<NavbarProps> = () => {
                 </div>
                 <div className='flex md:hidden h-full w-3/5 justify-end'>
                     <div className='flex justify-end w-16 h-full p-4'>
-                        <FiAlignJustify className='size-full'/>
+                        <FiAlignJustify className='size-full' />
                     </div>
                 </div>
             </div>

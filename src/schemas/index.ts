@@ -1,6 +1,6 @@
 import { UserRole } from "@prisma/client";
 import * as z from "zod";
-import { categories, colors } from "@/app/types";
+import { categories, categoryNames, colors } from "@/app/types";
 export const LoginSchema = z.object({
   email: z.string().email({
     message: "⚠️Email is required",
@@ -25,7 +25,7 @@ export const RegisterSchema = z.object({
 
 
 export const addProductSchema = z.object({
-   sku: z.string().min(9, {message:'SKU must contain at least 3 characters'}), //XXX-YYY-ZZZ
+  sku: z.string().min(9, { message: 'SKU must contain at least 3 characters' }), //XXX-YYY-ZZZ
   name: z.string().min(1, {
     message: "⚠️Name is required",
   }).max(40, { message: "Name can't be longer than 40 characters" })
@@ -33,7 +33,9 @@ export const addProductSchema = z.object({
   description: z.string().min(1, {
     message: "⚠️Description is required",
   }).max(200, { message: "Description can't be longer than 200 characters" }),
-  category: z.enum(categories, {
+
+
+  category: z.enum(categoryNames, {
     errorMap: (issue, ctx) => ({ message: '⚠️Invalid' })
   }),
   color: z.enum(colors, {

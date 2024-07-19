@@ -2,7 +2,7 @@
 import React, { startTransition } from 'react'
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from '@/components/ui/input';
-import { useForm } from "react-hook-form";
+import { useForm, useWatch, Control } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { useState, useTransition } from 'react';
@@ -26,7 +26,7 @@ import {
 import { addProductSchema } from '@/schemas';
 /* import { DropdownMenu } from '@/components/ui/dropdown-menu'; */
 import { addProduct } from '@/actions/add-product';
-import { categories } from '@/app/types';
+import { categories, categoryNames } from '@/app/types';
 import { Textarea } from "@/components/ui/textarea"
 import { colors } from '@/app/types';
 import { Button } from '@/components/ui/button';
@@ -44,7 +44,7 @@ const AddProduct = (props: Props) => {
       sku: "",
       name: "",
       description: "",
-      category: categories[0],
+      category: categoryNames[0],
       color: colors[0],
       price: 0,
       image: "https://cdn.dummyjson.com/products/images/furniture/Knoll%20Saarinen%20Executive%20Conference%20Chair/1.png",
@@ -60,7 +60,17 @@ const AddProduct = (props: Props) => {
   const [success, setSuccess] = useState<string>("");
   const [isPending, startTransition] = useTransition();
   const [isImageActive, setIsImageActive] = useState<boolean>(false);
+  const [firstSKU, setFirstSKU] = useState("")
+  const [secondSKU, setSecondSKU] = useState("")
 
+  function IsolateFirstSKU({ control }: { control: Control<z.infer<typeof addProductSchema>> }) {
+    const firstSKU = useWatch({
+      control,
+      name: "sku",
+      defaultValue: "XXX"
+    });
+
+  }
   const onSubmit = (values: z.infer<typeof addProductSchema>) => {
     alert('test')
     setError("");
@@ -148,9 +158,9 @@ const AddProduct = (props: Props) => {
                           <SelectContent>
                             <SelectGroup>
                               <SelectLabel>Categories</SelectLabel>
-                              {categories.map((category) => (
-                                <SelectItem {...field} disabled={isPending} key={category} value={category.toLowerCase()}>
-                                  {category}
+                              {categories.map(({ name }) => (
+                                <SelectItem {...field} disabled={isPending} key={name} value={name.toLowerCase()}>
+                                  {name}
                                 </SelectItem>
                               ))}
                             </SelectGroup>
@@ -232,7 +242,7 @@ const AddProduct = (props: Props) => {
             <div className='w-full grid grid-cols-7 gap-3'>
 
               <div className='col-span-1 flex items-center'>  <FormLabel>SKU :</FormLabel></div>
-              <div className='col-span-1 flex items-center'>XXX</div>
+              <div className='col-span-1 flex items-center'> {/* <IsolateFirstSKU control={control} /> */}</div>
               <div className='col-span-1 flex items-center'>YYY</div>
               <div className='col-span-4'>
 
