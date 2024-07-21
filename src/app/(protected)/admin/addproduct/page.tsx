@@ -34,8 +34,6 @@ import { FormSuccess } from '@/components/form-success';
 
 type Props = {}
 
-
-
 const AddProduct = (props: Props) => {
 
   const {
@@ -66,13 +64,11 @@ const AddProduct = (props: Props) => {
   const [success, setSuccess] = useState<string>("");
   const [isPending, startTransition] = useTransition();
   const [isImageActive, setIsImageActive] = useState<boolean>(false);
-  const [firstSKU, setFirstSKU] = useState("")
-  const [secondSKU, setSecondSKU] = useState("")
   const [categorySKU, setCategorySKU] = useState("")
   const [colorSKU, setColorSKU] = useState("")
 
   const onSubmit = (values: z.infer<typeof addProductSchema>) => {
-    alert('test')
+
     setError("");
     setSuccess("");
     console.log(values)
@@ -91,27 +87,24 @@ const AddProduct = (props: Props) => {
     });
   }
   return (
-
-
-    <Card className='w-full md:w-fit p-6'>
+    <Card className='w-full md:w-fit p-6 max-w-lg'>
       <CardHeader>
         <p className="text-xl font-semibold text-center">Add Product</p>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
-
           <div className="grid-cols-3 gap-4 items-center justify-between">
 
             <Input {...register("name")} disabled={isPending} placeholder='Product Name' />
-            {errors.description && <p>{errors.name?.message}</p>}
+            {errors.description && <p className='text-sm'>{errors.name?.message}</p>}
             <br />
 
             <Textarea className='resize-none h-32' {...register("description")} disabled={isPending} placeholder="Description" />
-            {errors.description && <p>{errors.description?.message}</p>}
+            {errors.description && <p className='text-sm'>{errors.description?.message}</p>}
             <br />
 
             <Input {...register("image")} disabled={isPending} placeholder="Image" />
-            {errors.description && <p>{errors.image?.message}</p>}
+            {errors.description && <p className='text-sm'>{errors.image?.message}</p>}
             <br />
             <div className='w-full flex justify-between items-center'>
 
@@ -130,7 +123,7 @@ const AddProduct = (props: Props) => {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-
+              {errors.category && <p className='text-sm'>{errors.category?.message}</p>}
               <Select onValueChange={(value) => setColorSKU(value)}>
                 <SelectTrigger>
                   <SelectValue {...register("color")} placeholder="Select a Color" />
@@ -146,55 +139,42 @@ const AddProduct = (props: Props) => {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-
+              {errors.category && <p>{errors.category?.message}</p>}
             </div>
             <br />
             <div className='grid grid-cols-4 gap-4'>
-
-              <div className='col-span-2 flex'>
-
-
+              <div className='col-span-2'>
                 <Input {...register("price")} disabled={isPending} type='number' placeholder='Price $' />
-
-
-
+                {errors.price && <p className='text-sm'>{errors.price?.message}</p>}
               </div>
               <div className='col-span-2'>
-
-
                 <Input {...register("stock")} disabled={isPending} type='number' placeholder='Stock' />
-
+                {errors.stock && <p className='text-sm'>{errors.stock?.message}</p> }
               </div>
-
             </div>
           </div>
           <br />
-
           <div className='w-full grid grid-cols-12'>
-
             <div className='col-span-2 flex items-center'>  SKU: </div>
             <div className='col-span-1 flex items-center'> {categorySKU ? categorySKU : 'XXX'}</div>
             <div className='col-span-1 text-2xl flex items-center justify-center'>-</div>
             <div className='col-span-1 flex items-center'>{colorSKU ? colorSKU : 'YYY'}</div>
             <div className='col-span-1 text-2xl flex items-center justify-center'>-</div>
             <div className='col-span-6'>
-
               <Input className='w-16' {...register("sku")} disabled={isPending} type='text' placeholder='SKU' />
-
+              
             </div>
-
+            
           </div>
+          <div>{errors.sku && <p className='text-sm'>{errors.sku?.message}</p> }</div>
           <br />
           <div>
             <Button className='w-full' type='submit'>SUBMIT</Button>
           </div>
-
         </form>
-        <div onClick={() => setIsImageActive(!isImageActive)}>CLICK ME</div>
+
       </CardContent>
     </Card>
-
-
   )
 }
 
