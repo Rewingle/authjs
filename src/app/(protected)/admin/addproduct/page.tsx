@@ -2,7 +2,7 @@
 import React, { startTransition } from 'react'
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from '@/components/ui/input';
-import { useForm, useWatch, Control, Controller } from "react-hook-form";
+import { useForm, useFieldArray, useWatch, Control, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { useState, useTransition } from 'react';
@@ -31,6 +31,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { colors } from '@/app/types';
 import { Button } from '@/components/ui/button';
 import { FormSuccess } from '@/components/form-success';
+import { Label } from '@radix-ui/react-label';
 
 type Props = {}
 
@@ -40,6 +41,7 @@ const AddProduct = (props: Props) => {
     register,
     handleSubmit,
     watch,
+    control,
     formState: { errors },
   } = useForm<z.infer<typeof addProductSchema>>({
     resolver: zodResolver(addProductSchema),
@@ -53,11 +55,28 @@ const AddProduct = (props: Props) => {
       image: "https://cdn.dummyjson.com/products/images/furniture/Knoll%20Saarinen%20Executive%20Conference%20Chair/1.png",
       stock: 0,
       sizes: [{
-        name: "XS",
-        stock: 10,
-      }], /* EXAMPLE {name: "XS", stock: 24,} */
+        name: "XS", stock: 0,
+      },
+      {
+        name: "S", stock: 0,
+      },
+      {
+        name: "M", stock: 0,
+      },
+      {
+        name: "L", stock: 0,
+      },
+      {
+        name: "XL", stock: 0,
+      },], /* EXAMPLE {name: "XS", stock: 24,} */
     },
 
+  });
+  const sizes = ["XS", "S", "M", "L", "XL"];
+
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormProvider)
+    name: "sizes", // unique name for your Field Array
   });
 
   const [error, setError] = useState<string>("");
@@ -96,15 +115,15 @@ const AddProduct = (props: Props) => {
           <div className="grid-cols-3 gap-4 items-center justify-between">
 
             <Input {...register("name")} disabled={isPending} placeholder='Product Name' />
-            {errors.description && <p className='text-sm'>{errors.name?.message}</p>}
+            {errors.description && <p className='text-sm text-red-500'>{errors.name?.message}</p>}
             <br />
 
             <Textarea className='resize-none h-32' {...register("description")} disabled={isPending} placeholder="Description" />
-            {errors.description && <p className='text-sm'>{errors.description?.message}</p>}
+            {errors.description && <p className='text-sm text-red-500'>{errors.description?.message}</p>}
             <br />
 
             <Input {...register("image")} disabled={isPending} placeholder="Image" />
-            {errors.description && <p className='text-sm'>{errors.image?.message}</p>}
+            {errors.description && <p className='text-sm text-red-500'>{errors.image?.message}</p>}
             <br />
             <div className='w-full flex justify-between items-center'>
 
@@ -145,16 +164,16 @@ const AddProduct = (props: Props) => {
             <div className='grid grid-cols-4 gap-4'>
               <div className='col-span-2'>
                 <Input {...register("price")} disabled={isPending} type='number' placeholder='Price $' />
-                {errors.price && <p className='text-sm'>{errors.price?.message}</p>}
+                {errors.price && <p className='text-sm text-red-500'>{errors.price?.message}</p>}
               </div>
               <div className='col-span-2'>
                 <Input {...register("stock")} disabled={isPending} type='number' placeholder='Stock' />
-                {errors.stock && <p className='text-sm'>{errors.stock?.message}</p> }
+                {errors.stock && <p className='text-sm text-red-500'>{errors.stock?.message}</p>}
               </div>
             </div>
           </div>
           <br />
-          <div className='w-full grid grid-cols-12'>
+          <div className='w-full grid grid-cols-12 italic'>
             <div className='col-span-2 flex items-center'>  SKU: </div>
             <div className='col-span-1 flex items-center'> {categorySKU ? categorySKU : 'XXX'}</div>
             <div className='col-span-1 text-2xl flex items-center justify-center'>-</div>
@@ -162,11 +181,44 @@ const AddProduct = (props: Props) => {
             <div className='col-span-1 text-2xl flex items-center justify-center'>-</div>
             <div className='col-span-6'>
               <Input className='w-16' {...register("sku")} disabled={isPending} type='text' placeholder='SKU' />
-              
+
             </div>
-            
+
           </div>
-          <div>{errors.sku && <p className='text-sm'>{errors.sku?.message}</p> }</div>
+          <div>{errors.sku && <p className='text-sm text-red-500'>{errors.sku?.message}</p>}</div>
+          <br />
+
+          {/* {sizes.map((size) => (
+              <div key={size}>
+                <p className='text-center'>{size}</p>
+                <Input {...register("sizes")} disabled={isPending} type='number' placeholder='-'/>
+                
+              </div>
+            ))} */}
+          <div>
+            <Label>STOCKS:</Label>
+            <div className='flex justify-end'>Total:</div>
+          </div>
+
+          <br />
+          <br />
+
+          <div className='grid grid-cols-5'>
+            {fields.map((field, index) => (
+              <div className='w-20'>
+                <p className='text-center'>{field.name}</p>
+                <Input
+                  key={field.name}
+                  disabled={isPending}
+                  type='number'
+                  placeholder='0' // important to include key with field's id
+                  {...register(`sizes.${index}.name`)}
+                />
+              </div>
+            ))}
+          </div>
+
+          <p>{errors.sizes?.message}</p>
           <br />
           <div>
             <Button className='w-full' type='submit'>SUBMIT</Button>
