@@ -2,6 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -58,6 +60,7 @@ const UserButton = () => {
 };
 
 const Navbar: React.FC<NavbarProps> = () => {
+    const pathname = usePathname();
     return (
         <nav className='h-16 w-full bg-white flex justify-center'>
             <div className='w-full px-4 md:p-0 md:w-3/4 h-full flex'>
@@ -69,6 +72,24 @@ const Navbar: React.FC<NavbarProps> = () => {
                         <span><Link href={'/'}>Home</Link></span>
                         <span><Link href={'products'}>Products</Link></span>
                         <span><Link href={'/test'}>Test</Link></span>
+                        <Button
+                            asChild
+                            variant={pathname === "/server" ? "default" : "outline"}
+                        >
+                            <Link href="/server">Server</Link>
+                        </Button>
+                        <Button
+                            asChild
+                            variant={pathname === "/client" ? "default" : "outline"}
+                        >
+                            <Link href="/client">Client</Link>
+                        </Button>
+                        <Button
+                            asChild
+                            variant={pathname === "/settings" ? "default" : "outline"}
+                        >
+                            <Link href="/settings">Settings</Link>
+                        </Button>
                     </div>
 
                 </div>

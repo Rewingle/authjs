@@ -15,14 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+
 import { addProductSchema } from '@/schemas';
 /* import { DropdownMenu } from '@/components/ui/dropdown-menu'; */
 import { addProduct } from '@/actions/add-product';
@@ -68,11 +61,10 @@ const AddProduct = (props: Props) => {
       },
       {
         name: "XL", stock: 0,
-      },], /* EXAMPLE {name: "XS", stock: 24,} */
+      },]
     },
 
   });
-  const sizes = ["XS", "S", "M", "L", "XL"];
 
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormProvider)
@@ -86,6 +78,17 @@ const AddProduct = (props: Props) => {
   const [categorySKU, setCategorySKU] = useState("")
   const [colorSKU, setColorSKU] = useState("")
 
+  const Total = ({ control }: { control: Control<z.infer<typeof addProductSchema>> }) => {
+    const formValues = useWatch({
+      name: "sizes",
+      control
+    });
+    const total = formValues.reduce(
+      (acc, current) => acc + current.stock,
+      0
+    );
+    return <p className='italic'>Total Amount: {total}</p>;
+  };
   const onSubmit = (values: z.infer<typeof addProductSchema>) => {
 
     setError("");
@@ -143,6 +146,7 @@ const AddProduct = (props: Props) => {
                 </SelectContent>
               </Select>
               {errors.category && <p className='text-sm'>{errors.category?.message}</p>}
+
               <Select onValueChange={(value) => setColorSKU(value)}>
                 <SelectTrigger>
                   <SelectValue {...register("color")} placeholder="Select a Color" />
@@ -187,32 +191,24 @@ const AddProduct = (props: Props) => {
           </div>
           <div>{errors.sku && <p className='text-sm text-red-500'>{errors.sku?.message}</p>}</div>
           <br />
-
-          {/* {sizes.map((size) => (
-              <div key={size}>
-                <p className='text-center'>{size}</p>
-                <Input {...register("sizes")} disabled={isPending} type='number' placeholder='-'/>
-                
-              </div>
-            ))} */}
           <div>
             <Label>STOCKS:</Label>
-            <div className='flex justify-end'>Total:</div>
+            <Total control={control} />
           </div>
 
           <br />
           <br />
 
-          <div className='grid grid-cols-5'>
+          <div className='flex justify-between'>
             {fields.map((field, index) => (
-              <div className='w-20'>
+              <div>
                 <p className='text-center'>{field.name}</p>
                 <Input
                   key={field.name}
                   disabled={isPending}
                   type='number'
                   placeholder='0' // important to include key with field's id
-                  {...register(`sizes.${index}.name`)}
+                  {...register(`sizes.${index}.stock` as const, { valueAsNumber: true, required: true })}
                 />
               </div>
             ))}
